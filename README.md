@@ -23,8 +23,8 @@ $ git clone https://github.com/your‑org/cro‑analytics.git && cd cro‑analyt
 # 2. Back‑end
 $ python -m venv .venv && source .venv/bin/activate
 $ pip install -r requirements.txt
-$ cp .env.example .env            # add your OpenAI key etc.
-$ python src/api_server.py        # default port 8083
+$ cp .env.example .env                    # add your OpenAI key etc.
+$ python backend/cro_api_server.py        # default port 8083
 
 # 3. Front‑end (optional)
 $ cd frontend
@@ -48,19 +48,30 @@ $ npm install && npm run dev      # http://localhost:3000
 
 ```
 .
-├─ src/
+├─ backend/
 │   ├─ ingestion/
-│   │   ├─ data_ingestion.py
-│   │   └─ schema_discovery.py
-│   ├─ engines/
-│   │   ├─ query_engine.py      # core planner/retriever/reasoner
+│   │   ├─ data_ingestion.py    # KG and Embedding constructor
+│   │   └─ schema_discovery.py  # Data Schema builder - for LLM context
+│   ├─ chat_engines/
+│   │   ├─ query_engine.py      # orchestrator
 │   │   └─ cro_query_engine.py  # executive formatter & viz helper
-│   ├─ api_server.py            # FastAPI gateway
+│   ├─ cro_api_server.py        # FastAPI gateway
 │   └─ components/              # visualisers, pydantic models, utils
-├─ data/                        # drop CSVs here
-├─ frontend/                    # React/Next.js UI
-└─ docs/
-    └─ query_engine.md          # in‑depth engine architecture
+│   │   ├─ nodes.py             # core planner/retriever/reasoner
+│   │   └─ tools.py             # node tools
+│   │   └─ models.py            # pydantic models
+│   ├─ data/                    # drop CSVs here
+│   ├─ frontend/                # React/Next.js UI
+│   ├─ config.py                # COnfiguration + keys
+│   ├─ TechDoc.md               # in‑depth engine architecture
+│   ├─ SetupGuide.md            # Setup doc
+│   ├─ README.md
+├─ frontend/
+│   ├─ pages/
+│   │   ├─ index.js             # Main frontend monolith
+│   │   └─ AnalyticsDashboard.js# Analytics component
+│   ├─ styles/
+                   
 ```
 
 ---
@@ -81,8 +92,8 @@ All variables live in `.env` and are loaded by `python‑dotenv`.
 ## 🧪 Testing
 
 ```bash
-$ pytest tests/    # unit tests for ingestion & query planner
-$ python tests/test_queries.py smoke   # end‑to‑end Q&A suite
+$ pytest backend/test_queries          # unit tests for search engine
+$ python database_diagnosis.py         # Test embeddings, SQL, KG properties
 ```
 
 ---
