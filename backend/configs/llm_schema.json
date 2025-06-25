@@ -1,0 +1,151 @@
+{
+  "tables": {
+    "opportunities": {
+      "columns": [
+        {
+          "name": "account_name",
+          "type": "TEXT",
+          "description": "Foreign key reference; e.g. Target Corporation (TTCE), AT&T Wireline Puerto Rico, DISNEY ONLINE NOHO"
+        },
+        {
+          "name": "opportunity_name",
+          "type": "TEXT",
+          "description": "Categorical with 49 unique values; e.g. PaaS: Analytics Cloud Implementation, OCI: Compute Implementation, SaaS: ERP Implementation"
+        },
+        {
+          "name": "stage",
+          "type": "TEXT",
+          "description": "Categorical with 6 unique values; e.g. Qualify, Propose, Negotiate"
+        },
+        {
+          "name": "fiscal_period",
+          "type": "TEXT",
+          "description": "Categorical with 1 unique values; e.g. Q1-2025"
+        },
+        {
+          "name": "amount",
+          "type": "DECIMAL",
+          "description": "Primary key; e.g. 86668.9, 53894.03, 14785.53"
+        },
+        {
+          "name": "probability",
+          "type": "INTEGER",
+          "description": "e.g. 14, 47, 10"
+        },
+        {
+          "name": "close_date",
+          "type": "TEXT",
+          "description": "Categorical with 10 unique values; e.g. 1/1/2025, 1/2/2025, 1/3/2025"
+        },
+        {
+          "name": "created_date",
+          "type": "TEXT",
+          "description": "Categorical with 1 unique values; e.g. 1/12/2025"
+        },
+        {
+          "name": "next_step",
+          "type": "TEXT",
+          "description": "e.g. Gather requirements from the VP of Sales, Review the proposal with the CTO, Send introduction email to the CTO"
+        },
+        {
+          "name": "lead_source",
+          "type": "TEXT",
+          "description": "Categorical with 5 unique values; e.g. Social Media, Referral, Cold Call"
+        },
+        {
+          "name": "type",
+          "type": "TEXT",
+          "description": "Categorical with 3 unique values; e.g. Expansion, Renewal, New Business"
+        },
+        {
+          "name": "primary_contact",
+          "type": "TEXT",
+          "description": "Foreign key reference; e.g. Elena Callahan, Harper Bennett, Harper Beck"
+        },
+        {
+          "name": "account_id",
+          "type": "TEXT",
+          "description": "Foreign key reference; e.g. 001Hu00003XRhnR, 001Hu00003XRhu4, 001Hu00003XRhpW"
+        },
+        {
+          "name": "contact_email",
+          "type": "TEXT",
+          "description": "Foreign key reference; e.g. elena.callahan@targetcorporation.com, harper.bennett@disneyonlinenoho.com, harper.beck@verizontelematicsinc.com"
+        },
+        {
+          "name": "contact_title",
+          "type": "TEXT",
+          "description": "Foreign key reference; Categorical with 18 unique values; e.g. Director of Engineering, VP of Marketing, Director of Operations"
+        }
+      ]
+    },
+    "account_and_contact": {
+      "columns": [
+        {
+          "name": "first_name",
+          "type": "TEXT",
+          "description": "e.g. Leah, Alex, Nora"
+        },
+        {
+          "name": "last_name",
+          "type": "TEXT",
+          "description": "e.g. Stewart, Barnes, Berg"
+        },
+        {
+          "name": "title",
+          "type": "TEXT",
+          "description": "Categorical with 20 unique values; e.g. Director of Sales, Executive Director, VP of Engineering"
+        },
+        {
+          "name": "account_name",
+          "type": "TEXT",
+          "description": "Foreign key reference; Categorical with 6 unique values; e.g. Walt Disney Animation Studios, BANK OF AMERICA CAPITAL MANAGEMENT INC, CHEVRON CHEMICAL"
+        },
+        {
+          "name": "email",
+          "type": "TEXT",
+          "description": "Primary key; e.g. leah.stewart@waltdisneyanimationstudios.com, alex.barnes@waltdisneyanimationstudios.com, nora.berg@waltdisneyanimationstudios.com"
+        },
+        {
+          "name": "account_id",
+          "type": "TEXT",
+          "description": "Foreign key reference; Categorical with 6 unique values; e.g. 001Hu00003XRhqK, 001Hu00003XRhtV, 001Hu00003XRhtX"
+        }
+      ]
+    }
+  },
+  "relationships": [
+    "(opportunities)-[:ACCOUNT_NAME]->(account_and_contact)",
+    "(opportunities)-[:ACCOUNT_NAME]->(account_and_contact)",
+    "(opportunities)-[:ACCOUNT]->(account_and_contact)",
+    "(opportunities)-[:ACCOUNT]->(account_and_contact)",
+    "(opportunities)-[:HAS_CONTACT]->(opportunities) // Within same table",
+    "(opportunities)-[:STAGE_PROGRESSION]->(opportunities) // Within same table",
+    "(opportunities)-[:SIMILAR_VALUE]->(opportunities) // Within same table",
+    "(opportunities)-[:COMPETITIVE_DEALS]->(opportunities) // Within same table",
+    "(opportunities)-[:RISK_SIMILARITY]->(opportunities) // Within same table",
+    "(opportunities)-[:RISK_PROGRESSION]->(opportunities) // Within same table",
+    "(opportunities)-[:SIMILAR_NEXT_STEPS]->(opportunities) // Within same table",
+    "(opportunities)-[:STAKEHOLDER_OVERLAP]->(opportunities) // Within same table",
+    "(opportunities)-[:SAME_CLOSE_PERIOD]->(opportunities) // Within same table",
+    "(opportunities)-[:QUARTER_END_DEALS]->(opportunities) // Within same table",
+    "(opportunities)-[:DEAL_HEALTH_SIMILARITY]->(opportunities) // Within same table",
+    "(opportunities)-[:OPTIMIZATION_CANDIDATES]->(opportunities) // Within same table",
+    "(opportunities)-[:SIMILAR_CONTACT_LEVEL]->(opportunities) // Within same table",
+    "(opportunities)-[:TEMPORAL]->(opportunities) // Within same table"
+  ],
+  "entity_nodes": [
+    "(:Stage) - Opportunity stages (Qualify, Propose, etc.)",
+    "(:LeadSource) - Lead sources (Web, Referral, etc.)",
+    "(:OpportunityType) - Opportunity types (New Business, Renewal, etc.)"
+  ],
+  "business_rules": [
+    "(:Opportunities)-[:IN_STAGE]->(:Stage)",
+    "(:Opportunities)-[:ORIGINATED_FROM]->(:LeadSource)",
+    "(:Opportunities)-[:OF_TYPE]->(:OpportunityType)",
+    "(:Opportunities)-[:SHARES_CONTACT]->(:Opportunities) // Same primary contact",
+    "(:Opportunities)-[:SIMILAR_VALUE]->(:Opportunities) // Amount within 10%",
+    "(:Opportunities:HighValue) // Opportunities > $300k",
+    "(:Opportunities:AtRisk) // High value but low probability"
+  ]
+}

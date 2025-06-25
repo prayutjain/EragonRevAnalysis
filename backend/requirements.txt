@@ -1,0 +1,45 @@
+# Core dependencies
+pandas
+numpy
+python-dotenv
+
+# LangChain ecosystem
+langchain
+langchain-openai
+langchain-community
+langgraph
+
+# Neo4j
+neo4j
+
+# Vector store
+chromadb
+
+# OpenAI
+openai
+
+# API framework
+fastapi
+uvicorn[standard]
+pydantic
+python-multipart
+
+# Observability
+langsmith
+
+# NLP for agnostic mode
+nltk
+spacy
+scikit-learn
+sentence-transformers
+
+# Testing
+pytest
+pytest-asyncio
+pytest-mock
+
+# Development
+black
+flake8
+mypy
+ipython
